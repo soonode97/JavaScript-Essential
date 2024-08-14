@@ -32,3 +32,5 @@ console.log(perfectMan);
 
 // 4. 오브젝트 배열 (entries)
 let entries = Object.entries(person);
+
+console.log(Object.keys(person));
