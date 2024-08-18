@@ -5,12 +5,12 @@ const $submitButton = document.querySelector("#submitButton");
 const $userInput = document.querySelector("#guessField");
 const $guessSlot = document.querySelector(".guesses");
 const $remainingCount = document.querySelector(".lastResult");
-const $startOverGame = document.querySelector(".resultParas");
 const $guessingResult = document.querySelector(".guessingResult");
-const $newGameGuide = document.createElement("p");
 const $circleArea = document.querySelector(".circleArea");
 const $answerCircleArea = document.querySelector(".answerCircleArea");
 const $guessCircleArea = document.querySelector(".guessCircleArea");
+const inputForm = document.querySelector("form");
+let newGameButton = document.createElement("button");
 
 let numGuesses = 1;
 let playGame = true;
@@ -67,7 +67,7 @@ function compareGuess(guess) {
   if (guess === randomNumber) {
     makeGuessCircle(guess, "guess");
     displayMessage(`정답입니다!`);
-    endGame().then(newGame(playGame));
+    endGame().then(newGame());
   } else if (guess < randomNumber) {
     makeGuessCircle(guess, "guess");
     displayMessage(`너무 낮아요! 다시 도전해 주세요!`);
@@ -96,24 +96,24 @@ function endGame() {
   $userInput.value = "";
   $userInput.setAttribute("disabled", "");
   $submitButton.setAttribute("disabled", "");
-  $newGameGuide.classList.add("button");
-  $startOverGame.appendChild($newGameGuide);
   playGame = false;
 
   return new Promise((resolve) => {
-    setTimeout(function() {
-      resolve(playGame);
-    }, 300);
-  })
+    setTimeout(function () {
+      newGameButton.id = "newGameButton";
+      newGameButton.innerText = "새 게임 시작";
+      inputForm.appendChild(newGameButton);
+      resolve();
+    }, 1000);
+  });
 }
 
 function newGame() {
-  if(playGame == false) {
-    setTimeout(function () {
-      alert("게임을 다시 시작합니다");
-      location.reload(true);
-    }, 1000);
-  }
+  newGameButton.addEventListener("click", e => {
+    e.preventDefault();
+    alert("게임을 다시 시작합니다!");
+    window.location.reload();
+  });
 }
 
 function makeAnswerCircle(guess) {
