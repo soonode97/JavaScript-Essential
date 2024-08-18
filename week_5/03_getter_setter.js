@@ -18,7 +18,7 @@
 
 class Rectangle {
     constructor(width, height) {
-        // _ : underscore, 이것은 private 은밀하고 감춰야 할 때 사용하는 것 (getters와 setters 를 사용할 때 필요)
+        // _ : underscore, 이것은 은밀하게(private) 감춰야 할 때 사용하는 것 (getters와 setters 를 사용할 때 필요)
         this._width = width;
         this._height = height;
     }

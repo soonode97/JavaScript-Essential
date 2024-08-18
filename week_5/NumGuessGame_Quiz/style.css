@@ -145,8 +145,12 @@ p {
 
 #answerCircle {
   background-color: black;
+  font-size: 20px;
+  color:#fff;
 }
 
 #guessCircle {
   background-color: red;
+  font-size: 20px;
+  color:#fff;
 }

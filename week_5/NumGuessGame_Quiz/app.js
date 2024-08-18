@@ -1,4 +1,4 @@
-let randomNumber = parseInt(Math.random() * 100 + 30);
+let randomNumber = parseInt(Math.random() * 100 + 20);
 
 // DOM 관련들은 보통 변수명 앞에 $기호를 붙이기도 합니다.
 const $submitButton = document.querySelector("#submitButton");
@@ -38,27 +38,27 @@ function checkGuess(guess) {
       displayGuesses(guess);
       clearCircle();
       compareGuess(guess);
-    }  
-  }    
+    }
+  }
 }
 
 function validate(guess) {
   if (isNaN(guess)) {
     alert("숫자를 입력해 주세요");
     return false;
-  } else if (guess < 10) {
-    alert("10 이상의 정수를 입력해 주세요");
+  } else if (guess < 20) {
+    alert("20 이상의 정수를 입력해 주세요");
     return false;
-  } else if (guess > 100) {
-    alert("100 이하의 정수를 입력해 주세요");
+  } else if (guess > 120) {
+    alert("120 이하의 정수를 입력해 주세요");
     return false;
   }
-  
+
   return true;
 }
 
 function clearCircle() {
-    if ($guessCircleArea.childElementCount >= 1) {
+  if ($guessCircleArea.childElementCount >= 1) {
     $guessCircleArea.removeChild($guessCircleArea.firstChild);
   }
 }
@@ -67,7 +67,7 @@ function compareGuess(guess) {
   if (guess === randomNumber) {
     makeGuessCircle(guess, "guess");
     displayMessage(`정답입니다!`);
-    endGame();
+    endGame().then(newGame(playGame));
   } else if (guess < randomNumber) {
     makeGuessCircle(guess, "guess");
     displayMessage(`너무 낮아요! 다시 도전해 주세요!`);
@@ -79,16 +79,17 @@ function compareGuess(guess) {
 
 // 유저가 입력한 input을 보여줍니다.
 function displayGuesses(guess) {
-  $userInput.value = "";
-  $guessSlot.innerHTML += `${guess}  `;
+  $userInput.value = guess;
+  $guessSlot.innerHTML += ` ${guess}`;
   numGuesses++;
   // 구현 1. 남아있는 숫자를 보여줄 수 있도록 아래의 = 이후를 작성해주세요!
-  $remainingCount.innerHTML = ;
+  $remainingCount.innerHTML = `${11 - numGuesses}`;
 }
 
 // 유저에게 띄울 메세지를 입력합니다.
 function displayMessage(message) {
   // 구현 2. 유저에게 메세지를 보여줄 수 있도록 아래의 영역을 구현해주세요
+  $guessingResult.innerHTML = `<h1>${message}</h1>`;
 }
 
 function endGame() {
@@ -98,21 +99,42 @@ function endGame() {
   $newGameGuide.classList.add("button");
   $startOverGame.appendChild($newGameGuide);
   playGame = false;
-  newGame();
+
+  return new Promise((resolve) => {
+    setTimeout(function() {
+      resolve(playGame);
+    }, 300);
+  })
+}
+
+function newGame() {
+  if(playGame == false) {
+    setTimeout(function () {
+      alert("게임을 다시 시작합니다");
+      location.reload(true);
+    }, 1000);
+  }
 }
 
 function makeAnswerCircle(guess) {
-  const CIRCLE_NAME = "answer"
+  const CIRCLE_NAME = "answer";
   // 구현3. 유저가 원의 크기로 정답을 유추하기 쉽도록 showCircle 함수를 이용해서 해당 부분을 구현해주세요,
   // showCircle 함수의 "작업"이 끝나면, 해당 div에 원의 이름을 입력해주세요
+  showCircle(guess, CIRCLE_NAME, $answerCircleArea).then((div) => {
+    div.id = "answerCircle";
+    div.innerText = "answer";
+  });
 }
 
 function makeGuessCircle(guess) {
-  const CIRCLE_NAME = "guess"
+  const CIRCLE_NAME = "guess";
   // 구현3. 유저가 원의 크기로 정답을 유추하기 쉽도록 showCircle 함수를 이용해서 해당 부분을 구현해주세요,
   // showCircle 함수의 "작업"이 끝나면, 해당 div에 원의 이름을 입력해주세요
+  showCircle(guess, CIRCLE_NAME, $guessCircleArea).then((div) => {
+    div.id = "guessCircle";
+    div.innerText = "guess";
+  });
 }
-
 
 // 원을 그려주는 함수입니다, css로 그려지는 속도를 애니메이션으로 구현되어있으며,
 // 원의 크기, 이름, 영역을 받아 해당 영역에 해당 크기로 인자로 받은 이름을 붙여 그려줍니다.
@@ -141,6 +163,6 @@ function showCircle(size, circleName, area) {
         div.removeEventListener("transitionend", handler);
         resolve(div);
       });
-    }, 0);
+    }, 15);
   });
 }
